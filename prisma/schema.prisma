@@ -30,3 +30,14 @@ model Session {
   collaborator  Boolean?  @default(false)
   emailVerified Boolean?  @default(false)
 }
+
+model ProductLimit {
+  id        String   @id @default(cuid())
+  productId String   @unique
+  title     String
+  shop      String
+  minLimit  Int?    
+  maxLimit  Int?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt  
+}

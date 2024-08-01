@@ -1,6 +1,26 @@
-# This file stores configurations for your Shopify app.
+# Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
+client_id = "095b46b4e8582db9232e02d5dbf9f87f"
+name = "min-max-app"
+handle = "min-max-app-3"
+application_url = "https://alpha-caution-potato-fe.trycloudflare.com"
+embedded = true
+
+[build]
+automatically_update_urls_on_dev = true
+dev_store_url = "test-store-dmch.myshopify.com"
+include_config_on_deploy = true
+
+[access_scopes]
+# Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
 scopes = "write_products"
+
+[auth]
+redirect_urls = [
+  "https://alpha-caution-potato-fe.trycloudflare.com/auth/callback",
+  "https://alpha-caution-potato-fe.trycloudflare.com/auth/shopify/callback",
+  "https://alpha-caution-potato-fe.trycloudflare.com/api/auth/callback"
+]
 
 [webhooks]
 api_version = "2024-07"
@@ -8,3 +28,6 @@ api_version = "2024-07"
   [[webhooks.subscriptions]]
   topics = [ "app/uninstalled" ]
   uri = "/webhooks"
+
+[pos]
+embedded = false
