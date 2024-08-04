@@ -3,7 +3,7 @@
 client_id = "095b46b4e8582db9232e02d5dbf9f87f"
 name = "min-max-app"
 handle = "min-max-app-3"
-application_url = "https://journal-strengths-doc-stocks.trycloudflare.com"
+application_url = "https://decent-import-gateway-witch.trycloudflare.com"
 embedded = true
 
 [build]
@@ -17,9 +17,9 @@ scopes = "write_products"
 
 [auth]
 redirect_urls = [
-  "https://journal-strengths-doc-stocks.trycloudflare.com/auth/callback",
-  "https://journal-strengths-doc-stocks.trycloudflare.com/auth/shopify/callback",
-  "https://journal-strengths-doc-stocks.trycloudflare.com/api/auth/callback"
+  "https://decent-import-gateway-witch.trycloudflare.com/auth/callback",
+  "https://decent-import-gateway-witch.trycloudflare.com/auth/shopify/callback",
+  "https://decent-import-gateway-witch.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]
