@@ -19,4 +19,8 @@ type ProductLimitItem = {
 
 export async function createProductLimit(data: NewProductLimitPayload): Promise<ProductLimitItem> {
   return await db.productLimit.create({data});
+};
+
+export async function getAllProductLimits(): Promise<ProductLimitItem[]> {
+  return await db.productLimit.findMany();
 }
