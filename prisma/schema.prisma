@@ -32,12 +32,13 @@ model Session {
 }
 
 model ProductLimit {
-  id        String   @id @default(cuid())
-  productId String   @unique
-  title     String
-  shop      String
-  minLimit  Int?    
-  maxLimit  Int?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt  
+  id            String   @id @default(cuid())
+  productId     String   @unique
+  title         String
+  productHandle String
+  shop          String
+  minLimit      Int?
+  maxLimit      Int?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 }

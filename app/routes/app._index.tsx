@@ -1,5 +1,5 @@
-import type { ActionFunctionArgs } from "@remix-run/node";
-import { useSubmit } from "@remix-run/react";
+import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
+import { json, useActionData, useLoaderData, useSubmit } from "@remix-run/react";
 import {
   Page,
   Layout,
@@ -12,34 +12,52 @@ import {
   Box,
   IndexTable,
   useIndexResourceState,
-  Link,
-  TextField
 } from "@shopify/polaris";
-import { useCallback, useState } from "react";
 import TableRow from "~/components/TableRow/TableRow";
+import { createProductLimit, getAllProductLimits, updateProductLimit, validateProductLimitPayload } from "~/models/ProductLimit.server";
 import { authenticate } from "~/shopify.server";
 
-type productLimitPayload = {
-  id?: string;
-  productId: string;
-  title: string;
-  shop: string;
-  minLimit?: number;
-  maxLimit?: number;
+export async function loader({ request }: LoaderFunctionArgs) {
+  return await getAllProductLimits();
 }
 
 export async function action({ request }: ActionFunctionArgs) {
   const { session } = await authenticate.admin(request);
   const { shop } = session;
-  const payload = await request.formData();
-  const createPayload
-  console.log(request);
+  const data: Record<string, string | number> = {
+    ...Object.fromEntries(await request.formData()),
+    shop,
+  };
 
-  return null;
+  console.log(data);
+
+  try {
+    const { id, productId, title, productHandle, shop, minLimit, maxLimit } = validateProductLimitPayload(data);
+
+    const actions: Record<string, () => void> = {
+      POST: () => createProductLimit({ productId, title, productHandle, shop }),
+      PATCH: () => {
+        if (!id) {
+          throw new Error('id should be provided');
+        }
+
+        updateProductLimit({ id, minLimit, maxLimit })
+      }
+    }
+
+    return actions[request.method]();
+  } catch (error) {
+    const errors = JSON.parse((error as Error).message);
+    return json({ errors }, { status: 422 });
+  }
 }
 
 export default function Index() {
+  const productLimitArray = useLoaderData<typeof loader>();
+  const errors = useActionData<typeof action>()?.errors;
   const submit = useSubmit();
+
+  console.log(errors);
 
   const productLimitList = [
     {
@@ -54,16 +72,6 @@ export default function Index() {
 
   const { selectedResources, allResourcesSelected, handleSelectionChange } = useIndexResourceState(productLimitList);
 
-  const rowMarkup2 = productLimitList.map(({ id, title }, index) => (
-    <TableRow
-      id={id}
-      key={id}
-      selected={selectedResources.includes(id)}
-      position={index}
-      productTitle={title}
-    />
-  ))
-
   const handleAddProductClick = async () => {
     const products = await window.shopify.resourcePicker({
       type: 'product',
@@ -71,13 +79,29 @@ export default function Index() {
     })
 
     if (products) {
-      const { id, title } = products[0];
+      const { id, title, handle } = products[0];
 
-      submit({ id, title }, { method: 'post' });
+      submit({ productId: id, title, productHandle: handle }, { method: 'post' });
     }
   }
 
+  const handleUpdateProductLimit = (id: string, minLimit: number, maxLimit: number) => {
+    submit({ id, minLimit, maxLimit }, { method: 'patch' })
+  }
 
+  const rowMarkup2 = productLimitArray.map(({ id, title, productHandle, shop, minLimit, maxLimit }, index) => (
+    <TableRow
+      id={id}
+      key={id}
+      selected={selectedResources.includes(id)}
+      position={index}
+      productTitle={title}
+      productLink={`https://${shop}/products/${productHandle}`}
+      minLimit={minLimit?.toString()}
+      maxLimit={maxLimit?.toString()}
+      onChangeLimits={handleUpdateProductLimit}
+    />
+  ))
 
   return (
     <Page>
@@ -112,6 +136,7 @@ export default function Index() {
                   { title: 'Max' },
                   { title: 'Actions' },
                 ]}
+                selectable={false}
               >
                 {rowMarkup2}
                 {/* {rowMarkup} */}

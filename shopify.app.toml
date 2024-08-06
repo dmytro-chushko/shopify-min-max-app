@@ -3,7 +3,7 @@
 client_id = "095b46b4e8582db9232e02d5dbf9f87f"
 name = "min-max-app"
 handle = "min-max-app-3"
-application_url = "https://themes-struck-alan-excerpt.trycloudflare.com"
+application_url = "https://lisa-ranch-end-dicke.trycloudflare.com"
 embedded = true
 
 [build]
@@ -17,9 +17,9 @@ scopes = "write_products"
 
 [auth]
 redirect_urls = [
-  "https://themes-struck-alan-excerpt.trycloudflare.com/auth/callback",
-  "https://themes-struck-alan-excerpt.trycloudflare.com/auth/shopify/callback",
-  "https://themes-struck-alan-excerpt.trycloudflare.com/api/auth/callback"
+  "https://lisa-ranch-end-dicke.trycloudflare.com/auth/callback",
+  "https://lisa-ranch-end-dicke.trycloudflare.com/auth/shopify/callback",
+  "https://lisa-ranch-end-dicke.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]
